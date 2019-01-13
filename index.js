@@ -8,6 +8,30 @@ const app = express();
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));
 
+app.get("/api/schedule", (req, res) => {
+  const url = "https://www.pgatour.com/tournaments/schedule.html";
+  let options = {
+    uri: url,
+    transform: function(body) {
+      return cheerio.load(body);
+    }
+  };
+
+  rp(options).then($ => {
+    let schedule = [];
+    const table = $(".table-styled").find("tr:not(.js-ad-container)");
+    for (let i = 0; i < table.length; i++) {
+      let current = table[i];
+      let name = $(current)
+        .find(".tournament-text")
+        .find(".js-tournament-name")
+        .attr("href");
+      schedule.push(name);
+    }
+    res.json(schedule);
+  });
+});
+
 app.get("/api/year/:year", (req, res) => {
   const year = req.params.year;
   const url = `https://www.pgatour.com/tournaments/sony-open-in-hawaii/past-results/jcr:content/mainParsys/pastresults.selectedYear.${year}.html`;
