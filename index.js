@@ -48,7 +48,6 @@ app.get("/api/schedule", (req, res) => {
 app.get("/api/:tournament/:year", (req, res) => {
   const year = req.params.year;
   const tournament = req.params.tournament;
-  // sony-open-in-hawaii
   const url = `https://www.pgatour.com/tournaments/${tournament}/past-results/jcr:content/mainParsys/pastresults.selectedYear.${year}.html`;
   let options = {
     uri: url,

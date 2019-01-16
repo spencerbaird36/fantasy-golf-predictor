@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
 import "./App.css";
-import { Dropdown, Segment } from "semantic-ui-react";
+import { Dropdown, Segment, Grid } from "semantic-ui-react";
 import PlayerTable from "./PlayerTable";
+import CurrentTournamentTable from "./CurrentTournamentTable";
 
 class App extends Component {
   state = {
@@ -13,19 +14,36 @@ class App extends Component {
   };
 
   componentWillMount() {
-    axios.get("/api/schedule").then(response => {
-      const tournamentOptions = response.data.tournaments.map(elem => {
-        return {
-          value: elem.htmlString,
-          text: elem.name
-        };
-      });
-
-      this.setState({
-        tournaments: [...this.state.tournaments, ...tournamentOptions],
-        currentTournamet: response.data.currentTournamet
-      });
-    });
+    axios
+      .all([
+        axios.get("/api/schedule"),
+        axios.get("https://statdata.pgatour.com/r/current/message.json")
+      ])
+      .then(
+        axios.spread((response, response2) => {
+          const tournamentOptions = response.data.tournaments.map((elem, i) => {
+            return {
+              key: i,
+              value: elem.htmlString,
+              text: elem.name
+            };
+          });
+          return axios
+            .get(
+              `https://statdata.pgatour.com/${response2.data.tc}/${
+                response2.data.tid
+              }/field.json`
+            )
+            .then(players => {
+              this.setState({
+                tournaments: [...this.state.tournaments, ...tournamentOptions],
+                currentTournamet: response.data.currentTournamet,
+                currentTournametPlayers: players.data.Tournament.Players,
+                currentTournamentName: players.data.Tournament.TournamentName
+              });
+            });
+        })
+      );
   }
 
   updateTournament = (e, { value }) => {
@@ -82,7 +100,17 @@ class App extends Component {
             onChange={this.updateTournament}
           />
         </Segment>
-        <PlayerTable players={this.state.historicalResults} />
+        <Grid columns={2} padded>
+          <Grid.Column>
+            <PlayerTable players={this.state.historicalResults} />
+          </Grid.Column>
+          <Grid.Column>
+            <CurrentTournamentTable
+              players={this.state.currentTournametPlayers}
+              name={this.state.currentTournamentName}
+            />
+          </Grid.Column>
+        </Grid>
       </Fragment>
     );
   }
