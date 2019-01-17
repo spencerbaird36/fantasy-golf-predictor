@@ -10,7 +10,9 @@ class App extends Component {
     tournaments: [],
     currentTournamet: null,
     value: null,
-    historicalResults: []
+    historicalResults: [],
+    currentTournametPlayers: [],
+    currentTournamentName: ""
   };
 
   componentWillMount() {
@@ -47,8 +49,10 @@ class App extends Component {
   }
 
   updateTournament = (e, { value }) => {
+    // const currentTourney = e.currentTarget.textContent;
     const formattedString = value.slice(13);
     const finalFormatedString = formattedString.slice(0, -5);
+    console.log(this.findPreviousThreeTournaments(this.state.tournaments));
     this.setState({ value: finalFormatedString }, () => {
       axios
         .all([
@@ -68,6 +72,30 @@ class App extends Component {
             });
           })
         );
+    });
+  };
+
+  findPreviousThreeTournaments = tournaments => {
+    const currentTourney = tournaments.find(elem => {
+      return elem.value === this.state.currentTournamet;
+    });
+    const currentTournamentIndex = tournaments.indexOf(currentTourney);
+    const previousTourneys = [];
+    for (let i = currentTournamentIndex - 3; i < currentTournamentIndex; i++) {
+      previousTourneys.push(tournaments[i].value);
+    }
+    return this.htmlParser(previousTourneys);
+  };
+
+  htmlParser = tournaments => {
+    return tournaments.map(elem => {
+      if (elem === "https://www.theplayers.com/") {
+        return elem;
+      }
+      return elem
+        .replace(/.html/g, "")
+        .slice(13)
+        .trim();
     });
   };
 
