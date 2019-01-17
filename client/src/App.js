@@ -4,6 +4,7 @@ import "./App.css";
 import { Dropdown, Segment, Grid } from "semantic-ui-react";
 import PlayerTable from "./PlayerTable";
 import CurrentTournamentTable from "./CurrentTournamentTable";
+import PriorThreeResults from "./PriorThreeResults.js";
 
 class App extends Component {
   state = {
@@ -12,7 +13,8 @@ class App extends Component {
     value: null,
     historicalResults: [],
     currentTournametPlayers: [],
-    currentTournamentName: ""
+    currentTournamentName: "",
+    threeTourneyHistory: []
   };
 
   componentWillMount() {
@@ -30,20 +32,41 @@ class App extends Component {
               text: elem.name
             };
           });
+          const priorThreeTourneys = this.findPreviousThreeTournaments(
+            tournamentOptions,
+            response.data.currentTournamet
+          );
+          console.log(priorThreeTourneys);
           return axios
-            .get(
-              `https://statdata.pgatour.com/${response2.data.tc}/${
-                response2.data.tid
-              }/field.json`
-            )
-            .then(players => {
-              this.setState({
-                tournaments: [...this.state.tournaments, ...tournamentOptions],
-                currentTournamet: response.data.currentTournamet,
-                currentTournametPlayers: players.data.Tournament.Players,
-                currentTournamentName: players.data.Tournament.TournamentName
-              });
-            });
+            .all([
+              axios.get(
+                `https://statdata.pgatour.com/${response2.data.tc}/${
+                  response2.data.tid
+                }/field.json`
+              ),
+              axios.get(`/api/${priorThreeTourneys[0]}/2019`),
+              axios.get(`/api/${priorThreeTourneys[1]}/2019`),
+              axios.get(`/api/${priorThreeTourneys[2]}/2019`)
+            ])
+            .then(
+              axios.spread((players, previous1, previous2, previous3) => {
+                const lastThreeResults = this.constructData(
+                  previous1.data,
+                  previous2.data,
+                  previous3.data
+                );
+                this.setState({
+                  tournaments: [
+                    ...this.state.tournaments,
+                    ...tournamentOptions
+                  ],
+                  currentTournamet: response.data.currentTournamet,
+                  currentTournametPlayers: players.data.Tournament.Players,
+                  currentTournamentName: players.data.Tournament.TournamentName,
+                  threeTourneyHistory: lastThreeResults
+                });
+              })
+            );
         })
       );
   }
@@ -52,7 +75,6 @@ class App extends Component {
     // const currentTourney = e.currentTarget.textContent;
     const formattedString = value.slice(13);
     const finalFormatedString = formattedString.slice(0, -5);
-    console.log(this.findPreviousThreeTournaments(this.state.tournaments));
     this.setState({ value: finalFormatedString }, () => {
       axios
         .all([
@@ -75,9 +97,9 @@ class App extends Component {
     });
   };
 
-  findPreviousThreeTournaments = tournaments => {
+  findPreviousThreeTournaments = (tournaments, currentTournamet) => {
     const currentTourney = tournaments.find(elem => {
-      return elem.value === this.state.currentTournamet;
+      return elem.value === currentTournamet;
     });
     const currentTournamentIndex = tournaments.indexOf(currentTourney);
     const previousTourneys = [];
@@ -128,14 +150,19 @@ class App extends Component {
             onChange={this.updateTournament}
           />
         </Segment>
-        <Grid columns={2} padded>
+        <Grid columns={3} padded>
           <Grid.Column>
+            Historial Tournament Data
             <PlayerTable players={this.state.historicalResults} />
           </Grid.Column>
           <Grid.Column>
+            Last Three Tournaments
+            <PriorThreeResults players={this.state.threeTourneyHistory} />
+          </Grid.Column>
+          <Grid.Column>
+            Current Tournament - {this.state.currentTournamentName}
             <CurrentTournamentTable
               players={this.state.currentTournametPlayers}
-              name={this.state.currentTournamentName}
             />
           </Grid.Column>
         </Grid>

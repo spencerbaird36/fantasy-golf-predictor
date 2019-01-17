@@ -20,9 +20,6 @@ class CurrentTournamentTable extends React.Component {
     }
     return (
       <Fragment>
-        {this.props.name
-          ? `Current Tournament Players - ${this.props.name}`
-          : ""}
         {updatePlayers && (
           <ReactTable
             data={updatePlayers}
@@ -43,6 +40,7 @@ class CurrentTournamentTable extends React.Component {
                 filterAll: true
               }
             ]}
+            defaultPageSize={10}
           />
         )}
       </Fragment>

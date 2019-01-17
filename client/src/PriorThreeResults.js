@@ -4,9 +4,10 @@ import "react-table/react-table.css";
 import numeral from "numeral";
 import matchSorter from "match-sorter";
 
-class PlayerTable extends React.Component {
+class PriorThreeResults extends React.Component {
   render() {
     const { players } = this.props;
+    console.log(players);
     return (
       <Fragment>
         <ReactTable
@@ -45,4 +46,4 @@ class PlayerTable extends React.Component {
   }
 }
 
-export default PlayerTable;
+export default PriorThreeResults;
