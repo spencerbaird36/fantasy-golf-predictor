@@ -45,6 +45,42 @@ app.get("/api/schedule", (req, res) => {
   });
 });
 
+app.get("/api/top-rankings", (req, res) => {
+  const url = "https://www.pgatour.com/stats/stat.127.html";
+  let options = {
+    uri: url,
+    transform: function(body) {
+      return cheerio.load(body);
+    }
+  };
+
+  rp(options).then($ => {
+    let results = [];
+    const table = $(".table-styled").find("tbody tr");
+    for (let i = 0; i < table.length; i++) {
+      let ranking = {};
+      let current = table[i];
+      let rankThisWeek = $(current)
+        .children("td:nth-child(1)")
+        .text()
+        .trim();
+      let rankLastWeek = $(current)
+        .children("td:nth-child(2)")
+        .text()
+        .trim();
+      let name = $(current)
+        .children("td:nth-child(3)")
+        .text()
+        .trim();
+      ranking.thisWeek = rankThisWeek;
+      ranking.lastWeek = rankLastWeek;
+      ranking.name = name;
+      results.push(ranking);
+    }
+    res.json(results);
+  });
+});
+
 app.get("/api/:tournament/:year", (req, res) => {
   const year = req.params.year;
   const tournament = req.params.tournament;
