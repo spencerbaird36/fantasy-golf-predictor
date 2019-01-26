@@ -9,6 +9,7 @@ class WorldRankingTable extends React.Component {
       <Fragment>
         <ReactTable
           data={this.props.players}
+          sortable={false}
           filterable
           columns={[
             {
