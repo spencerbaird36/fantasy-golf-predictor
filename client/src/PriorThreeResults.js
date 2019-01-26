@@ -7,7 +7,6 @@ import matchSorter from "match-sorter";
 class PriorThreeResults extends React.Component {
   render() {
     const { players } = this.props;
-    console.log(players);
     return (
       <Fragment>
         <ReactTable
@@ -24,6 +23,10 @@ class PriorThreeResults extends React.Component {
             {
               Header: "Finishes",
               accessor: "position"
+            },
+            {
+              Header: "Average Finish",
+              accessor: "averagePosition"
             },
             {
               Header: "Money",

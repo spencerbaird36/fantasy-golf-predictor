@@ -16,7 +16,8 @@ class App extends Component {
     currentTournametPlayers: [],
     currentTournamentName: "",
     threeTourneyHistory: [],
-    worldRankings: []
+    worldRankings: [],
+    selectedTourney: ""
   };
 
   componentWillMount() {
@@ -80,7 +81,7 @@ class App extends Component {
   }
 
   updateTournament = (e, { value }) => {
-    // const currentTourney = e.currentTarget.textContent;
+    const selectedTourney = e.currentTarget.textContent;
     const formattedString = value.slice(13);
     const finalFormatedString = formattedString.slice(0, -5);
     this.setState({ value: finalFormatedString }, () => {
@@ -98,7 +99,8 @@ class App extends Component {
               response2016.data
             );
             this.setState({
-              historicalResults: [...allData]
+              historicalResults: [...allData],
+              selectedTourney
             });
           })
         );
@@ -142,13 +144,33 @@ class App extends Component {
       }
       return acc;
     }, []);
-    return allPlayers;
+    const playersWithFomattedData = allPlayers.map(player => {
+      const positions = player.position.split(" ");
+      const averagePosition = positions.reduce((acc, elem) => {
+        if (elem.charAt(0) === "T") {
+          elem = parseInt(elem.substring(1), 10);
+        } else if (elem === "CUT" || elem === "W/D") {
+          elem = 80;
+        }
+        acc += +elem;
+        return acc;
+      }, 0);
+
+      return {
+        ...player,
+        averagePosition: Math.round(averagePosition / positions.length)
+      };
+    });
+    return playersWithFomattedData;
   };
 
   render() {
     return (
       <Fragment>
-        <Segment>
+        <Header as="h1" textAlign="center" className="header-class">
+          Fantasy Golf Predictor
+        </Header>
+        <Segment raised>
           <Grid padded>
             <Header as="h1">PGA Tour Season Schedule</Header>
             <Icon name="golf ball" size="big" />
@@ -162,14 +184,21 @@ class App extends Component {
             onChange={this.updateTournament}
           />
         </Segment>
-        <Segment>
+        <Segment raised>
           <Grid columns={2} padded>
             <Grid.Column>
-              <Header as="h1">Historial Tournament Data</Header>
+              <Header as="h1">
+                Historial Tournament Data{" "}
+                {this.state.selectedTourney
+                  ? ` - ${this.state.selectedTourney}`
+                  : ""}
+              </Header>
+              *CUT or W/D is calculated as finishing 80th*
               <PlayerTable players={this.state.historicalResults} />
             </Grid.Column>
             <Grid.Column>
               <Header as="h1">Last Three Tournaments</Header>
+              *CUT or W/D is calculated as finishing 80th*
               <PriorThreeResults players={this.state.threeTourneyHistory} />
             </Grid.Column>
             <Grid.Column>

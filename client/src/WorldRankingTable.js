@@ -12,19 +12,19 @@ class WorldRankingTable extends React.Component {
           filterable
           columns={[
             {
+              Header: "Name",
+              accessor: "name",
+              filterMethod: (filter, rows) =>
+                matchSorter(rows, filter.value, { keys: ["name"] }),
+              filterAll: true
+            },
+            {
               Header: "Ranking This Week",
               accessor: "thisWeek"
             },
             {
               Header: "Ranking Last Week",
               accessor: "lastWeek"
-            },
-            {
-              Header: "Name",
-              accessor: "name",
-              filterMethod: (filter, rows) =>
-                matchSorter(rows, filter.value, { keys: ["name"] }),
-              filterAll: true
             }
           ]}
           defaultPageSize={10}

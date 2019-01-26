@@ -25,6 +25,10 @@ class PlayerTable extends React.Component {
               accessor: "position"
             },
             {
+              Header: "Average Finish",
+              accessor: "averagePosition"
+            },
+            {
               Header: "Money",
               accessor: "winnings",
               Cell: row => {

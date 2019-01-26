@@ -22,9 +22,8 @@
   color: #61dafb;
 }
 
-.icon-image {
-  float: left;
-  display: inline-flex;
+.header-class {
+  margin: 25px 0 25px 0 !important;
 }
 
 @keyframes App-logo-spin {
