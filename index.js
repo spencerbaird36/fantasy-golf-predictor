@@ -45,8 +45,44 @@ app.get("/api/schedule", (req, res) => {
   });
 });
 
-app.get("/api/top-rankings", (req, res) => {
+app.get("/api/top_rankings", (req, res) => {
   const url = "https://www.pgatour.com/stats/stat.127.html";
+  let options = {
+    uri: url,
+    transform: function(body) {
+      return cheerio.load(body);
+    }
+  };
+
+  rp(options).then($ => {
+    let results = [];
+    const table = $(".table-styled").find("tbody tr");
+    for (let i = 0; i < table.length; i++) {
+      let ranking = {};
+      let current = table[i];
+      let rankThisWeek = $(current)
+        .children("td:nth-child(1)")
+        .text()
+        .trim();
+      let rankLastWeek = $(current)
+        .children("td:nth-child(2)")
+        .text()
+        .trim();
+      let name = $(current)
+        .children("td:nth-child(3)")
+        .text()
+        .trim();
+      ranking.thisWeek = rankThisWeek;
+      ranking.lastWeek = rankLastWeek;
+      ranking.name = name;
+      results.push(ranking);
+    }
+    res.json(results);
+  });
+});
+
+app.get("/api/world_ranking", (req, res) => {
+  const url = "https://www.pgatour.com/stats/stat.186.html";
   let options = {
     uri: url,
     transform: function(body) {
@@ -122,6 +158,7 @@ app.get("/api/:tournament/:year", (req, res) => {
     res.json(results.slice(1));
   });
 });
+
 // Handles any requests that don't match the ones above
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/client/build/index.html"));

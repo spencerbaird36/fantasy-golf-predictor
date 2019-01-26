@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
 import "./App.css";
-import { Dropdown, Segment, Grid } from "semantic-ui-react";
+import { Dropdown, Segment, Grid, Header, Icon } from "semantic-ui-react";
 import PlayerTable from "./PlayerTable";
 import CurrentTournamentTable from "./CurrentTournamentTable";
-import PriorThreeResults from "./PriorThreeResults.js";
+import PriorThreeResults from "./PriorThreeResults";
+import WorldRankingTable from "./WorldRankingTable";
 
 class App extends Component {
   state = {
@@ -14,7 +15,8 @@ class App extends Component {
     historicalResults: [],
     currentTournametPlayers: [],
     currentTournamentName: "",
-    threeTourneyHistory: []
+    threeTourneyHistory: [],
+    worldRankings: []
   };
 
   componentWillMount() {
@@ -32,11 +34,11 @@ class App extends Component {
               text: elem.name
             };
           });
+
           const priorThreeTourneys = this.findPreviousThreeTournaments(
             tournamentOptions,
             response.data.currentTournamet
           );
-          console.log(priorThreeTourneys);
           return axios
             .all([
               axios.get(
@@ -46,26 +48,32 @@ class App extends Component {
               ),
               axios.get(`/api/${priorThreeTourneys[0]}/2019`),
               axios.get(`/api/${priorThreeTourneys[1]}/2019`),
-              axios.get(`/api/${priorThreeTourneys[2]}/2019`)
+              axios.get(`/api/${priorThreeTourneys[2]}/2019`),
+              axios.get("/api/world_ranking")
             ])
             .then(
-              axios.spread((players, previous1, previous2, previous3) => {
-                const lastThreeResults = this.constructData(
-                  previous1.data,
-                  previous2.data,
-                  previous3.data
-                );
-                this.setState({
-                  tournaments: [
-                    ...this.state.tournaments,
-                    ...tournamentOptions
-                  ],
-                  currentTournamet: response.data.currentTournamet,
-                  currentTournametPlayers: players.data.Tournament.Players,
-                  currentTournamentName: players.data.Tournament.TournamentName,
-                  threeTourneyHistory: lastThreeResults
-                });
-              })
+              axios.spread(
+                (players, previous1, previous2, previous3, worldRankings) => {
+                  const lastThreeResults = this.constructData(
+                    previous1.data,
+                    previous2.data,
+                    previous3.data
+                  );
+
+                  this.setState({
+                    tournaments: [
+                      ...this.state.tournaments,
+                      ...tournamentOptions
+                    ],
+                    currentTournamet: response.data.currentTournamet,
+                    currentTournametPlayers: players.data.Tournament.Players,
+                    currentTournamentName:
+                      players.data.Tournament.TournamentName,
+                    threeTourneyHistory: lastThreeResults,
+                    worldRankings: worldRankings.data
+                  });
+                }
+              )
             );
         })
       );
@@ -138,34 +146,46 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <Fragment>
         <Segment>
+          <Grid padded>
+            <Header as="h1">PGA Tour Season Schedule</Header>
+            <Icon name="golf ball" size="big" />
+          </Grid>
+
           <Dropdown
-            placeholder="Select Tournament"
+            placeholder="Select Tournament for Historial Data"
             fluid
             selection
             options={this.state.tournaments}
             onChange={this.updateTournament}
           />
         </Segment>
-        <Grid columns={3} padded>
-          <Grid.Column>
-            Historial Tournament Data
-            <PlayerTable players={this.state.historicalResults} />
-          </Grid.Column>
-          <Grid.Column>
-            Last Three Tournaments
-            <PriorThreeResults players={this.state.threeTourneyHistory} />
-          </Grid.Column>
-          <Grid.Column>
-            Current Tournament - {this.state.currentTournamentName}
-            <CurrentTournamentTable
-              players={this.state.currentTournametPlayers}
-            />
-          </Grid.Column>
-        </Grid>
+        <Segment>
+          <Grid columns={2} padded>
+            <Grid.Column>
+              <Header as="h1">Historial Tournament Data</Header>
+              <PlayerTable players={this.state.historicalResults} />
+            </Grid.Column>
+            <Grid.Column>
+              <Header as="h1">Last Three Tournaments</Header>
+              <PriorThreeResults players={this.state.threeTourneyHistory} />
+            </Grid.Column>
+            <Grid.Column>
+              <Header as="h1">
+                Current Tournament Field - {this.state.currentTournamentName}
+              </Header>
+              <CurrentTournamentTable
+                players={this.state.currentTournametPlayers}
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <Header as="h1">Official World Golf Rankings</Header>
+              <WorldRankingTable players={this.state.worldRankings} />
+            </Grid.Column>
+          </Grid>
+        </Segment>
       </Fragment>
     );
   }
