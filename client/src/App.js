@@ -6,6 +6,7 @@ import PlayerTable from "./PlayerTable";
 import CurrentTournamentTable from "./CurrentTournamentTable";
 import PriorThreeResults from "./PriorThreeResults";
 import WorldRankingTable from "./WorldRankingTable";
+import WeightedResultsTable from "./WeightedResultsTable";
 
 class App extends Component {
   state = {
@@ -149,7 +150,7 @@ class App extends Component {
       const averagePosition = positions.reduce((acc, elem) => {
         if (elem.charAt(0) === "T") {
           elem = parseInt(elem.substring(1), 10);
-        } else if (elem === "CUT" || elem === "W/D") {
+        } else if (elem === "CUT" || elem === "W/D" || elem === "DQ") {
           elem = 80;
         }
         acc += +elem;
@@ -167,53 +168,66 @@ class App extends Component {
   render() {
     return (
       <Fragment>
-        <Header as="h1" textAlign="center" className="header-class">
-          Fantasy Golf Predictor
-        </Header>
         <Segment raised>
-          <Grid padded>
-            <Header as="h1">PGA Tour Season Schedule</Header>
-            <Icon name="golf ball" size="big" />
-          </Grid>
+          <Header as="h1" textAlign="center" className="header-class">
+            Fantasy Golf Predictor
+          </Header>
+          <Segment raised>
+            <Grid padded>
+              <Header as="h1">PGA Tour Season Schedule</Header>
+              <Icon name="golf ball" size="big" />
+            </Grid>
 
-          <Dropdown
-            placeholder="Select Tournament for Historial Data"
-            fluid
-            selection
-            options={this.state.tournaments}
-            onChange={this.updateTournament}
-          />
-        </Segment>
-        <Segment raised>
-          <Grid columns={2} padded>
-            <Grid.Column>
-              <Header as="h1">
-                Historial Tournament Data{" "}
-                {this.state.selectedTourney
-                  ? ` - ${this.state.selectedTourney}`
-                  : ""}
-              </Header>
-              *CUT or W/D is calculated as finishing 80th*
-              <PlayerTable players={this.state.historicalResults} />
-            </Grid.Column>
-            <Grid.Column>
-              <Header as="h1">Last Three Tournaments</Header>
-              *CUT or W/D is calculated as finishing 80th*
-              <PriorThreeResults players={this.state.threeTourneyHistory} />
-            </Grid.Column>
-            <Grid.Column>
-              <Header as="h1">
-                Current Tournament Field - {this.state.currentTournamentName}
-              </Header>
-              <CurrentTournamentTable
-                players={this.state.currentTournametPlayers}
+            <Dropdown
+              placeholder="Select Tournament for Historial Data"
+              fluid
+              selection
+              options={this.state.tournaments}
+              onChange={this.updateTournament}
+            />
+          </Segment>
+          {this.state.historicalResults.length > 0 && (
+            <Segment raised>
+              <WeightedResultsTable
+                historicalResults={this.state.historicalResults}
+                lastThreeResults={this.state.threeTourneyHistory}
+                officialWorldRankings={this.state.worldRankings}
+                currentField={this.state.currentTournametPlayers}
+                selectedTourney={this.state.selectedTourney}
               />
-            </Grid.Column>
-            <Grid.Column>
-              <Header as="h1">Official World Golf Rankings</Header>
-              <WorldRankingTable players={this.state.worldRankings} />
-            </Grid.Column>
-          </Grid>
+            </Segment>
+          )}
+          <Segment raised>
+            <Grid columns={2} padded>
+              <Grid.Column>
+                <Header as="h1">
+                  Historial Tournament Data{" "}
+                  {this.state.selectedTourney
+                    ? ` - ${this.state.selectedTourney}`
+                    : ""}
+                </Header>
+                *CUT or W/D is calculated as finishing 80th*
+                <PlayerTable players={this.state.historicalResults} />
+              </Grid.Column>
+              <Grid.Column>
+                <Header as="h1">Last Three Tournaments</Header>
+                *CUT or W/D is calculated as finishing 80th*
+                <PriorThreeResults players={this.state.threeTourneyHistory} />
+              </Grid.Column>
+              <Grid.Column>
+                <Header as="h1">
+                  Current Tournament Field - {this.state.currentTournamentName}
+                </Header>
+                <CurrentTournamentTable
+                  players={this.state.currentTournametPlayers}
+                />
+              </Grid.Column>
+              <Grid.Column>
+                <Header as="h1">Official World Golf Rankings</Header>
+                <WorldRankingTable players={this.state.worldRankings} />
+              </Grid.Column>
+            </Grid>
+          </Segment>
         </Segment>
       </Fragment>
     );

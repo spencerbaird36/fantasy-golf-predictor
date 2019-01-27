@@ -43,7 +43,7 @@ class PlayerTable extends React.Component {
             }
           ]}
           defaultPageSize={10}
-          className="-striped -highlight"
+          className="-highlight"
         />
       </Fragment>
     );
