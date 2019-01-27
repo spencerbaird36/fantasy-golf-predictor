@@ -177,7 +177,11 @@ class App extends Component {
               <Header as="h1">PGA Tour Season Schedule</Header>
               <Icon name="golf ball" size="big" />
             </Grid>
-
+            <Grid padded>
+              <Header as="h5" className="header-current-tournament">
+                Current Tournament - {this.state.currentTournamentName}
+              </Header>
+            </Grid>
             <Dropdown
               placeholder="Select Tournament for Historial Data"
               fluid

@@ -26,6 +26,10 @@
   margin: 25px 0 25px 0 !important;
 }
 
+.header-current-tournament {
+  margin: 0 0 15px 0 !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
