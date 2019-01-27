@@ -206,12 +206,12 @@ class App extends Component {
                     ? ` - ${this.state.selectedTourney}`
                     : ""}
                 </Header>
-                *CUT or W/D is calculated as finishing 80th*
+                ***CUT, W/D or DQ are calculated as finishing 80th***
                 <PlayerTable players={this.state.historicalResults} />
               </Grid.Column>
               <Grid.Column>
                 <Header as="h1">Last Three Tournaments</Header>
-                *CUT or W/D is calculated as finishing 80th*
+                ***CUT, W/D or DQ are calculated as finishing 80th***
                 <PriorThreeResults players={this.state.threeTourneyHistory} />
               </Grid.Column>
               <Grid.Column>
