@@ -121,8 +121,11 @@ class WeightedResultsTable extends React.Component {
             </Message.Item>
             <Message.Item>
               Historical average finish for the past 3 years. Top 20 players are
-              considered, giving 20 points to the top finisher. Players must
-              have played at least twice to be considered.
+              considered, giving 20 points to the top finisher.{" "}
+              <strong>
+                Players must have played at least twice over the past 3 years to
+                be considered.
+              </strong>
             </Message.Item>
             <Message.Item>
               Last 3 tournaments in current season by money total. Top 30
@@ -130,8 +133,11 @@ class WeightedResultsTable extends React.Component {
             </Message.Item>
             <Message.Item>
               Last 3 tournaments in current season by average finish. Top 20
-              players are considered, giving 20 points to the top finisher.
-              Players must have played at least twice to be considered.
+              players are considered, giving 20 points to the top finisher.{" "}
+              <strong>
+                Players must have played at least twice in the past 3
+                tournaments to be considered.
+              </strong>
             </Message.Item>
             <Message.Item>
               Total Points. Sum of all prior columns out of 100 possible points.
