@@ -4,7 +4,7 @@ import "react-table/react-table.css";
 import numeral from "numeral";
 import matchSorter from "match-sorter";
 
-class PriorThreeResults extends React.Component {
+class PriorFourResults extends React.Component {
   render() {
     const { players } = this.props;
     return (
@@ -50,4 +50,4 @@ class PriorThreeResults extends React.Component {
   }
 }
 
-export default PriorThreeResults;
+export default PriorFourResults;

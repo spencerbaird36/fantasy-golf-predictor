@@ -4,7 +4,7 @@ import "./App.css";
 import { Dropdown, Segment, Grid, Header, Icon } from "semantic-ui-react";
 import PlayerTable from "./PlayerTable";
 import CurrentTournamentTable from "./CurrentTournamentTable";
-import PriorThreeResults from "./PriorThreeResults";
+import PriorFourResults from "./PriorFourResults";
 import WorldRankingTable from "./WorldRankingTable";
 import WeightedResultsTable from "./WeightedResultsTable";
 
@@ -51,15 +51,24 @@ class App extends Component {
               axios.get(`/api/${priorThreeTourneys[0]}/2019`),
               axios.get(`/api/${priorThreeTourneys[1]}/2019`),
               axios.get(`/api/${priorThreeTourneys[2]}/2019`),
+              axios.get(`/api/${priorThreeTourneys[3]}/2019`),
               axios.get("/api/world_ranking")
             ])
             .then(
               axios.spread(
-                (players, previous1, previous2, previous3, worldRankings) => {
+                (
+                  players,
+                  previous1,
+                  previous2,
+                  previous3,
+                  previous4,
+                  worldRankings
+                ) => {
                   const lastThreeResults = this.constructData(
                     previous1.data,
                     previous2.data,
-                    previous3.data
+                    previous3.data,
+                    previous4.data
                   );
 
                   this.setState({
@@ -90,20 +99,24 @@ class App extends Component {
         .all([
           axios.get(`/api/${this.state.value}/2018`),
           axios.get(`/api/${this.state.value}/2017`),
-          axios.get(`/api/${this.state.value}/2016`)
+          axios.get(`/api/${this.state.value}/2016`),
+          axios.get(`/api/${this.state.value}/2015`)
         ])
         .then(
-          axios.spread((response2018, response2017, response2016) => {
-            const allData = this.constructData(
-              response2018.data,
-              response2017.data,
-              response2016.data
-            );
-            this.setState({
-              historicalResults: [...allData],
-              selectedTourney
-            });
-          })
+          axios.spread(
+            (response2018, response2017, response2016, response2015) => {
+              const allData = this.constructData(
+                response2018.data,
+                response2017.data,
+                response2016.data,
+                response2015.data
+              );
+              this.setState({
+                historicalResults: [...allData],
+                selectedTourney
+              });
+            }
+          )
         );
     });
   };
@@ -114,7 +127,7 @@ class App extends Component {
     });
     const currentTournamentIndex = tournaments.indexOf(currentTourney);
     const previousTourneys = [];
-    for (let i = currentTournamentIndex - 3; i < currentTournamentIndex; i++) {
+    for (let i = currentTournamentIndex - 4; i < currentTournamentIndex; i++) {
       previousTourneys.push(tournaments[i].value);
     }
     return this.htmlParser(previousTourneys);
@@ -132,8 +145,8 @@ class App extends Component {
     });
   };
 
-  constructData = (one, two, three) => {
-    const reducableArray = [...one, ...two, ...three];
+  constructData = (one, two, three, four) => {
+    const reducableArray = [...one, ...two, ...three, ...four];
     const allPlayers = reducableArray.reduce((acc, curr) => {
       let name = curr.name;
       let found = acc.find(elem => elem.name === name);
@@ -215,9 +228,9 @@ class App extends Component {
                 <PlayerTable players={this.state.historicalResults} />
               </Grid.Column>
               <Grid.Column>
-                <Header as="h3">Last Three Tournaments</Header>
+                <Header as="h3">Last Four Tournaments</Header>
                 ***CUT, W/D or DQ are calculated as finishing 80th***
-                <PriorThreeResults players={this.state.threeTourneyHistory} />
+                <PriorFourResults players={this.state.threeTourneyHistory} />
               </Grid.Column>
               <Grid.Column>
                 <Header as="h3">

@@ -61,22 +61,22 @@ class WeightedResultsTable extends React.Component {
       20
     );
 
-    const rankLastThreeResultsByMoney = this.rankPlayersByMoney(
+    const rankLastFourResultsByMoney = this.rankPlayersByMoney(
       this.props.lastThreeResults,
-      "Last Three Results By Money",
+      "Last Four Results By Money",
       30
     );
 
-    const rankLastThreeResultsByAverageFinish = this.rankPlayersByAverageFinish(
+    const rankLastFourResultsByAverageFinish = this.rankPlayersByAverageFinish(
       this.props.lastThreeResults,
-      "Last Three Results By Avg Finish",
+      "Last Four Results By Avg Finish",
       20
     );
     const allPlayers = [
       ...rankHistoricalResultsByMoney,
       ...rankHistoricalResultsByAverageFinish,
-      ...rankLastThreeResultsByMoney,
-      ...rankLastThreeResultsByAverageFinish
+      ...rankLastFourResultsByMoney,
+      ...rankLastFourResultsByAverageFinish
     ];
 
     return allPlayers
@@ -116,26 +116,26 @@ class WeightedResultsTable extends React.Component {
           <Message.Header>Points Scale</Message.Header>
           <Message.List>
             <Message.Item>
-              Historical money total for the past 3 years. Top 30 players are
+              Historical money total for the past 4 years. Top 30 players are
               considered, giving 30 points to the top finisher.
             </Message.Item>
             <Message.Item>
-              Historical average finish for the past 3 years. Top 20 players are
+              Historical average finish for the past 4 years. Top 20 players are
               considered, giving 20 points to the top finisher.{" "}
               <strong>
-                Players must have played at least twice over the past 3 years to
+                Players must have played at least twice over the past 4 years to
                 be considered.
               </strong>
             </Message.Item>
             <Message.Item>
-              Last 3 tournaments in current season by money total. Top 30
+              Last 4 tournaments in current season by money total. Top 30
               players are considered, giving 30 points to the top finisher.
             </Message.Item>
             <Message.Item>
-              Last 3 tournaments in current season by average finish. Top 20
+              Last 4 tournaments in current season by average finish. Top 20
               players are considered, giving 20 points to the top finisher.{" "}
               <strong>
-                Players must have played at least twice in the past 3
+                Players must have played at least twice in the past 4
                 tournaments to be considered.
               </strong>
             </Message.Item>
@@ -178,26 +178,26 @@ class WeightedResultsTable extends React.Component {
               }
             },
             {
-              Header: "Last 3 - Money (30)",
+              Header: "Last 4 - Money (30)",
               Cell: row => {
                 const found = row.original.allMetrics.find(elem =>
-                  elem.hasOwnProperty("Last Three Results By Money")
+                  elem.hasOwnProperty("Last Four Results By Money")
                 );
                 if (found) {
-                  return found["Last Three Results By Money"];
+                  return found["Last Four Results By Money"];
                 } else {
                   return 0;
                 }
               }
             },
             {
-              Header: "Last 3 - Avg Finish (20)",
+              Header: "Last 4 - Avg Finish (20)",
               Cell: row => {
                 const found = row.original.allMetrics.find(elem =>
-                  elem.hasOwnProperty("Last Three Results By Avg Finish")
+                  elem.hasOwnProperty("Last Four Results By Avg Finish")
                 );
                 if (found) {
-                  return found["Last Three Results By Avg Finish"];
+                  return found["Last Four Results By Avg Finish"];
                 } else {
                   return 0;
                 }
