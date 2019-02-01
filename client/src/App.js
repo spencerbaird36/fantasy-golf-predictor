@@ -185,6 +185,7 @@ class App extends Component {
             <Dropdown
               placeholder="Select Tournament for Historcial Data"
               fluid
+              search
               selection
               options={this.state.tournaments}
               onChange={this.updateTournament}
