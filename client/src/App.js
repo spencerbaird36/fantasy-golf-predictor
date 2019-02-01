@@ -183,7 +183,7 @@ class App extends Component {
               </Header>
             </Grid>
             <Dropdown
-              placeholder="Select Tournament for Historial Data"
+              placeholder="Select Tournament for Historcial Data"
               fluid
               selection
               options={this.state.tournaments}
@@ -204,8 +204,8 @@ class App extends Component {
           <Segment raised>
             <Grid columns={2} padded>
               <Grid.Column>
-                <Header as="h1">
-                  Historial Tournament Data{" "}
+                <Header as="h3">
+                  Historical Tournament Data{" "}
                   {this.state.selectedTourney
                     ? ` - ${this.state.selectedTourney}`
                     : ""}
@@ -214,12 +214,12 @@ class App extends Component {
                 <PlayerTable players={this.state.historicalResults} />
               </Grid.Column>
               <Grid.Column>
-                <Header as="h1">Last Three Tournaments</Header>
+                <Header as="h3">Last Three Tournaments</Header>
                 ***CUT, W/D or DQ are calculated as finishing 80th***
                 <PriorThreeResults players={this.state.threeTourneyHistory} />
               </Grid.Column>
               <Grid.Column>
-                <Header as="h1">
+                <Header as="h3">
                   Current Tournament Field - {this.state.currentTournamentName}
                 </Header>
                 <CurrentTournamentTable
@@ -227,7 +227,7 @@ class App extends Component {
                 />
               </Grid.Column>
               <Grid.Column>
-                <Header as="h1">Official World Golf Rankings</Header>
+                <Header as="h3">Official World Golf Rankings</Header>
                 <WorldRankingTable players={this.state.worldRankings} />
               </Grid.Column>
             </Grid>
