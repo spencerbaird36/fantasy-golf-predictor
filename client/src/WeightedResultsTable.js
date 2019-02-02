@@ -72,6 +72,14 @@ class WeightedResultsTable extends React.Component {
       "Last Four Results By Avg Finish",
       20
     );
+
+    const worldRankings = this.props.officialWorldRankings.map(player => {
+      return {
+        name: player.name,
+        worldRanking: player.thisWeek
+      };
+    });
+
     const allPlayers = [
       ...rankHistoricalResultsByMoney,
       ...rankHistoricalResultsByAverageFinish,
@@ -79,7 +87,7 @@ class WeightedResultsTable extends React.Component {
       ...rankLastFourResultsByAverageFinish
     ];
 
-    return allPlayers
+    const lastFourAndHistorical = allPlayers
       .reduce((acc, player) => {
         let playerName = player.name;
         const found = acc.find(elem => elem.name === playerName);
@@ -105,6 +113,19 @@ class WeightedResultsTable extends React.Component {
           totalPoints: player.totalPoints
         };
       });
+
+    return lastFourAndHistorical.map(player => {
+      const values = {};
+      values.name = player.name;
+      values.allMetrics = player.allMetrics;
+      values.totalPoints = player.totalPoints;
+      worldRankings.forEach(person => {
+        if (person.name === player.name) {
+          values.worldRanking = person.worldRanking;
+        }
+      });
+      return values;
+    });
   };
 
   render() {
@@ -202,6 +223,10 @@ class WeightedResultsTable extends React.Component {
                   return 0;
                 }
               }
+            },
+            {
+              Header: "World Ranking",
+              accessor: "worldRanking"
             },
             {
               Header: "Total Points (100)",
