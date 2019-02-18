@@ -123,7 +123,14 @@ app.get("/api/:tournament/:year", (req, res) => {
   if (tournament === "wgc-mexico-championship") {
     tournament = "wgc-mexico-championship/en";
   }
-  const url = `https://www.pgatour.com/tournaments/${tournament}/past-results/jcr:content/mainParsys/pastresults.selectedYear.${year}.html`;
+
+  let url;
+  if (tournament === "the-players") {
+    url = `https://www.theplayers.com/past-results/jcr:content/mainParsys/pastresults.selectedYear.${year}.html`;
+  } else {
+    url = `https://www.pgatour.com/tournaments/${tournament}/past-results/jcr:content/mainParsys/pastresults.selectedYear.${year}.html`;
+  }
+
   let options = {
     uri: url,
     transform: function(body) {

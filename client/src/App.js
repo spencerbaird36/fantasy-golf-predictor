@@ -92,9 +92,18 @@ class App extends Component {
 
   updateTournament = (e, { value }) => {
     const selectedTourney = e.currentTarget.textContent;
-    const formattedString = value.slice(13).replace(/\/en/g, "");
-    const finalFormatedString = formattedString.slice(0, -5);
-    this.setState({ value: finalFormatedString }, () => {
+    let formattedString;
+    console.log(value);
+    if (value === "https://www.theplayers.com/") {
+      formattedString = "the-players";
+    } else {
+      formattedString = value
+        .slice(13)
+        .replace(/\/en/g, "")
+        .slice(0, -5);
+    }
+
+    this.setState({ value: formattedString }, () => {
       axios
         .all([
           axios.get(`/api/${this.state.value}/2018`),
