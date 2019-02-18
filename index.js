@@ -119,7 +119,10 @@ app.get("/api/world_ranking", (req, res) => {
 
 app.get("/api/:tournament/:year", (req, res) => {
   const year = req.params.year;
-  const tournament = req.params.tournament;
+  let tournament = req.params.tournament;
+  if (tournament === "wgc-mexico-championship") {
+    tournament = "wgc-mexico-championship/en";
+  }
   const url = `https://www.pgatour.com/tournaments/${tournament}/past-results/jcr:content/mainParsys/pastresults.selectedYear.${year}.html`;
   let options = {
     uri: url,

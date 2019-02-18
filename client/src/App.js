@@ -92,7 +92,7 @@ class App extends Component {
 
   updateTournament = (e, { value }) => {
     const selectedTourney = e.currentTarget.textContent;
-    const formattedString = value.slice(13);
+    const formattedString = value.slice(13).replace(/\/en/g, "");
     const finalFormatedString = formattedString.slice(0, -5);
     this.setState({ value: finalFormatedString }, () => {
       axios
@@ -141,6 +141,7 @@ class App extends Component {
       return elem
         .replace(/.html/g, "")
         .slice(13)
+        .replace(/\/en\//g, "")
         .trim();
     });
   };
