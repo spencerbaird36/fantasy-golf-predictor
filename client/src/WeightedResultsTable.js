@@ -140,6 +140,10 @@ class WeightedResultsTable extends React.Component {
       "Rory McIlroy"
     ];
     const { fedexRankings } = this.props;
+    const currentPlayers = this.props.currentField.map(player => {
+      const name = player.PlayerName.split(",");
+      return `${name[1]} ${name[0]}`.trim();
+    });
     return (
       <Fragment>
         <Header as="h1">Player Point Values</Header>
@@ -174,12 +178,12 @@ class WeightedResultsTable extends React.Component {
             <Message.Item>
               Total Points. Sum of all prior columns out of 100 possible points.
             </Message.Item>
-            <Message.Item style={{ color: "red" }}>
+            <Message.Item style={{ color: "#DC143C" }}>
               <strong>
                 Red highlighed rows are players that have already been picked.
               </strong>
             </Message.Item>
-            <Message.Item style={{ color: "green" }}>
+            <Message.Item style={{ color: "#7CFC00" }}>
               <strong>
                 Green highlighed rows are players that in the current top 30 of
                 the Fedex Rankings.
@@ -187,15 +191,20 @@ class WeightedResultsTable extends React.Component {
             </Message.Item>
           </Message.List>
         </Message>
+        <div>
+          <p>
+            <strong># = Player is in current field</strong>
+          </p>
+        </div>
         <ReactTable
           data={this.makePlayerData()}
           getTdProps={(state, rowInfo, column) => {
             if (rowInfo && rowInfo.row) {
               let color;
               if (takenPlayers.includes(rowInfo.row.name)) {
-                color = "red";
+                color = "#DC143C";
               } else if (fedexRankings.includes(rowInfo.row.name)) {
-                color = "green";
+                color = "#7CFC00";
               }
               return {
                 style: {
@@ -209,7 +218,12 @@ class WeightedResultsTable extends React.Component {
           columns={[
             {
               Header: "Player Name",
-              accessor: "name"
+              accessor: "name",
+              Cell: row => {
+                return currentPlayers.includes(row.original.name)
+                  ? `${row.original.name} #`
+                  : row.original.name;
+              }
             },
             {
               Header: "Historical - Money (30)",
