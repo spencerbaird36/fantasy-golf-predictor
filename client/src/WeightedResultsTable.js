@@ -193,7 +193,7 @@ class WeightedResultsTable extends React.Component {
         </Message>
         <div>
           <p>
-            <strong># = Player is in current field</strong>
+            <strong># = Player is in {this.props.currentTournamentName}</strong>
           </p>
         </div>
         <ReactTable
