@@ -129,6 +129,17 @@ class WeightedResultsTable extends React.Component {
   };
 
   render() {
+    const takenPlayers = [
+      "Marc Leishman",
+      "Adam Hadwin",
+      "Charles Howell III",
+      "Hideki Matsuyama",
+      "Phil Mickelson",
+      "Bubba Watson",
+      "Scott Brown",
+      "Rory McIlroy"
+    ];
+    const { fedexRankings } = this.props;
     return (
       <Fragment>
         <Header as="h1">Player Point Values</Header>
@@ -163,10 +174,38 @@ class WeightedResultsTable extends React.Component {
             <Message.Item>
               Total Points. Sum of all prior columns out of 100 possible points.
             </Message.Item>
+            <Message.Item style={{ color: "red" }}>
+              <strong>
+                Red highlighed rows are players that have already been picked.
+              </strong>
+            </Message.Item>
+            <Message.Item style={{ color: "green" }}>
+              <strong>
+                Green highlighed rows are players that in the current top 30 of
+                the Fedex Rankings.
+              </strong>
+            </Message.Item>
           </Message.List>
         </Message>
         <ReactTable
           data={this.makePlayerData()}
+          getTdProps={(state, rowInfo, column) => {
+            if (rowInfo && rowInfo.row) {
+              let color;
+              if (takenPlayers.includes(rowInfo.row.name)) {
+                color = "red";
+              } else if (fedexRankings.includes(rowInfo.row.name)) {
+                color = "green";
+              }
+              return {
+                style: {
+                  background: color
+                }
+              };
+            } else {
+              return {};
+            }
+          }}
           columns={[
             {
               Header: "Player Name",

@@ -45,8 +45,8 @@ app.get("/api/schedule", (req, res) => {
   });
 });
 
-app.get("/api/top_rankings", (req, res) => {
-  const url = "https://www.pgatour.com/stats/stat.127.html";
+app.get("/api/fedex_rankings", (req, res) => {
+  const url = "https://www.pgatour.com/stats/stat.02394.html";
   let options = {
     uri: url,
     transform: function(body) {
@@ -57,25 +57,13 @@ app.get("/api/top_rankings", (req, res) => {
   rp(options).then($ => {
     let results = [];
     const table = $(".table-styled").find("tbody tr");
-    for (let i = 0; i < table.length; i++) {
-      let ranking = {};
+    for (let i = 0; i < 30; i++) {
       let current = table[i];
-      let rankThisWeek = $(current)
-        .children("td:nth-child(1)")
-        .text()
-        .trim();
-      let rankLastWeek = $(current)
-        .children("td:nth-child(2)")
-        .text()
-        .trim();
       let name = $(current)
         .children("td:nth-child(3)")
         .text()
         .trim();
-      ranking.thisWeek = rankThisWeek;
-      ranking.lastWeek = rankLastWeek;
-      ranking.name = name;
-      results.push(ranking);
+      results.push(name);
     }
     res.json(results);
   });

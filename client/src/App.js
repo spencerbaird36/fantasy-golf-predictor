@@ -18,7 +18,8 @@ class App extends Component {
     currentTournamentName: "",
     threeTourneyHistory: [],
     worldRankings: [],
-    selectedTourney: ""
+    selectedTourney: "",
+    fedexRankings: []
   };
 
   componentWillMount() {
@@ -52,7 +53,8 @@ class App extends Component {
               axios.get(`/api/${priorThreeTourneys[1]}/2019`),
               axios.get(`/api/${priorThreeTourneys[2]}/2019`),
               axios.get(`/api/${priorThreeTourneys[3]}/2019`),
-              axios.get("/api/world_ranking")
+              axios.get("/api/world_ranking"),
+              axios.get("/api/fedex_rankings")
             ])
             .then(
               axios.spread(
@@ -62,7 +64,8 @@ class App extends Component {
                   previous2,
                   previous3,
                   previous4,
-                  worldRankings
+                  worldRankings,
+                  fedexRankings
                 ) => {
                   const lastThreeResults = this.constructData(
                     previous1.data,
@@ -81,7 +84,8 @@ class App extends Component {
                     currentTournamentName:
                       players.data.Tournament.TournamentName,
                     threeTourneyHistory: lastThreeResults,
-                    worldRankings: worldRankings.data
+                    worldRankings: worldRankings.data,
+                    fedexRankings: fedexRankings.data
                   });
                 }
               )
@@ -93,7 +97,6 @@ class App extends Component {
   updateTournament = (e, { value }) => {
     const selectedTourney = e.currentTarget.textContent;
     let formattedString;
-    console.log(value);
     if (value === "https://www.theplayers.com/") {
       formattedString = "the-players";
     } else {
@@ -222,6 +225,7 @@ class App extends Component {
                 officialWorldRankings={this.state.worldRankings}
                 currentField={this.state.currentTournametPlayers}
                 selectedTourney={this.state.selectedTourney}
+                fedexRankings={this.state.fedexRankings}
               />
             </Segment>
           )}
