@@ -62,13 +62,13 @@ class WeightedResultsTable extends React.Component {
     );
 
     const rankLastFourResultsByMoney = this.rankPlayersByMoney(
-      this.props.lastThreeResults,
+      this.props.lastFourResults,
       "Last Four Results By Money",
       30
     );
 
     const rankLastFourResultsByAverageFinish = this.rankPlayersByAverageFinish(
-      this.props.lastThreeResults,
+      this.props.lastFourResults,
       "Last Four Results By Avg Finish",
       20
     );
@@ -124,6 +124,10 @@ class WeightedResultsTable extends React.Component {
           values.worldRanking = person.worldRanking;
         }
       });
+      const odds = this.props.weeklyOdds.find(person => {
+        return person.playerName === player.name;
+      });
+      values.odds = odds ? odds.odds : "";
       return values;
     });
   };
@@ -144,6 +148,7 @@ class WeightedResultsTable extends React.Component {
       const name = player.PlayerName.split(",");
       return `${name[1]} ${name[0]}`.trim();
     });
+
     return (
       <Fragment>
         <Header as="h1">Player Point Values</Header>
@@ -193,7 +198,10 @@ class WeightedResultsTable extends React.Component {
         </Message>
         <div>
           <p>
-            <strong># = Player is in {this.props.currentTournamentName}</strong>
+            <strong>
+              # = Player is in current tournament (
+              {this.props.currentTournamentName})
+            </strong>
           </p>
         </div>
         <ReactTable
@@ -282,6 +290,10 @@ class WeightedResultsTable extends React.Component {
             {
               Header: "World Ranking",
               accessor: "worldRanking"
+            },
+            {
+              Header: "Odds",
+              accessor: "odds"
             },
             {
               Header: "Total Points (100)",

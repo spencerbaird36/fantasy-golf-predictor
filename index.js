@@ -32,6 +32,15 @@ app.get("/api/schedule", (req, res) => {
         .find(".js-tournament-name")
         .text()
         .trim();
+      let finalTotal = "";
+      let purse = $(current)
+        .find(".tournament-text")
+        .text()
+        .trim()
+        .match(/[0-9]/g);
+      if (purse !== null) {
+        finalTotal = +purse.join().replace(/,/g, "");
+      }
 
       let htmlString = $(current)
         .find(".tournament-text")
@@ -39,6 +48,7 @@ app.get("/api/schedule", (req, res) => {
         .attr("href");
       tournamentInfo.htmlString = htmlString;
       tournamentInfo.name = name;
+      tournamentInfo.purse = finalTotal;
       schedule["tournaments"].push(tournamentInfo);
     }
     res.json(schedule);
@@ -154,6 +164,37 @@ app.get("/api/:tournament/:year", (req, res) => {
       results.push(player);
     }
     res.json(results.slice(1));
+  });
+});
+
+app.get("/api/weekly_odds", (req, res) => {
+  const url = "http://www.golfodds.com/weekly-odds.html";
+  let options = {
+    uri: url,
+    transform: function(body) {
+      return cheerio.load(body);
+    }
+  };
+
+  rp(options).then($ => {
+    let results = [];
+    const table = $(".Copy-black").find("tbody tr");
+    for (let i = 1; i < 75; i++) {
+      let oddsRank = {};
+      let current = table[i];
+      let playerName = $(current)
+        .children("td:nth-child(1)")
+        .text()
+        .trim();
+      let odds = $(current)
+        .children("td:nth-child(2)")
+        .text()
+        .trim();
+      oddsRank.playerName = playerName;
+      oddsRank.odds = odds;
+      results.push(oddsRank);
+    }
+    res.json(results);
   });
 });
 

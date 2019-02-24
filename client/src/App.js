@@ -22,7 +22,7 @@ class App extends Component {
     fedexRankings: []
   };
 
-  componentWillMount() {
+  componentDidMount() {
     axios
       .all([
         axios.get("/api/schedule"),
@@ -38,7 +38,7 @@ class App extends Component {
             };
           });
 
-          const priorThreeTourneys = this.findPreviousThreeTournaments(
+          const priorFourTourneys = this.findPreviousFourTournaments(
             tournamentOptions,
             response.data.currentTournamet
           );
@@ -49,12 +49,13 @@ class App extends Component {
                   response2.data.tid
                 }/field.json`
               ),
-              axios.get(`/api/${priorThreeTourneys[0]}/2019`),
-              axios.get(`/api/${priorThreeTourneys[1]}/2019`),
-              axios.get(`/api/${priorThreeTourneys[2]}/2019`),
-              axios.get(`/api/${priorThreeTourneys[3]}/2019`),
+              axios.get(`/api/${priorFourTourneys[0]}/2019`),
+              axios.get(`/api/${priorFourTourneys[1]}/2019`),
+              axios.get(`/api/${priorFourTourneys[2]}/2019`),
+              axios.get(`/api/${priorFourTourneys[3]}/2019`),
               axios.get("/api/world_ranking"),
-              axios.get("/api/fedex_rankings")
+              axios.get("/api/fedex_rankings"),
+              axios.get("/api/weekly_odds")
             ])
             .then(
               axios.spread(
@@ -65,9 +66,10 @@ class App extends Component {
                   previous3,
                   previous4,
                   worldRankings,
-                  fedexRankings
+                  fedexRankings,
+                  weeklyOdds
                 ) => {
-                  const lastThreeResults = this.constructData(
+                  const lastFourResults = this.constructData(
                     previous1.data,
                     previous2.data,
                     previous3.data,
@@ -83,9 +85,10 @@ class App extends Component {
                     currentTournametPlayers: players.data.Tournament.Players,
                     currentTournamentName:
                       players.data.Tournament.TournamentName,
-                    threeTourneyHistory: lastThreeResults,
+                    fourTourneyHistory: lastFourResults,
                     worldRankings: worldRankings.data,
-                    fedexRankings: fedexRankings.data
+                    fedexRankings: fedexRankings.data,
+                    weeklyOdds: weeklyOdds.data
                   });
                 }
               )
@@ -133,7 +136,7 @@ class App extends Component {
     });
   };
 
-  findPreviousThreeTournaments = (tournaments, currentTournamet) => {
+  findPreviousFourTournaments = (tournaments, currentTournamet) => {
     const currentTourney = tournaments.find(elem => {
       return elem.value === currentTournamet;
     });
@@ -221,12 +224,13 @@ class App extends Component {
             <Segment raised>
               <WeightedResultsTable
                 historicalResults={this.state.historicalResults}
-                lastThreeResults={this.state.threeTourneyHistory}
+                lastFourResults={this.state.fourTourneyHistory}
                 officialWorldRankings={this.state.worldRankings}
                 currentField={this.state.currentTournametPlayers}
                 selectedTourney={this.state.selectedTourney}
                 fedexRankings={this.state.fedexRankings}
                 currentTournamentName={this.state.currentTournamentName}
+                weeklyOdds={this.state.weeklyOdds}
               />
             </Segment>
           )}
@@ -245,7 +249,7 @@ class App extends Component {
               <Grid.Column>
                 <Header as="h3">Last Four Tournaments</Header>
                 ***CUT, W/D or DQ are calculated as finishing 80th***
-                <PriorFourResults players={this.state.threeTourneyHistory} />
+                <PriorFourResults players={this.state.fourTourneyHistory} />
               </Grid.Column>
               <Grid.Column>
                 <Header as="h3">
