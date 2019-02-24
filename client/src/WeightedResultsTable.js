@@ -278,7 +278,13 @@ class WeightedResultsTable extends React.Component {
             {
               Header: "Odds",
               accessor: "odds",
-              width: 80
+              Cell: row => {
+                return this.props.selectedTourney ===
+                  this.props.currentTournamentName
+                  ? row.original.odds
+                  : "";
+              },
+              width: 90
             },
             {
               Header: "Total Points (100)",
