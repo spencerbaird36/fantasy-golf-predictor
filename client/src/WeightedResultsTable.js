@@ -73,13 +73,6 @@ class WeightedResultsTable extends React.Component {
       20
     );
 
-    const worldRankings = this.props.officialWorldRankings.map(player => {
-      return {
-        name: player.name,
-        worldRanking: player.thisWeek
-      };
-    });
-
     const allPlayers = [
       ...rankHistoricalResultsByMoney,
       ...rankHistoricalResultsByAverageFinish,
@@ -119,11 +112,6 @@ class WeightedResultsTable extends React.Component {
       values.name = player.name;
       values.allMetrics = player.allMetrics;
       values.totalPoints = player.totalPoints;
-      worldRankings.forEach(person => {
-        if (person.name === player.name) {
-          values.worldRanking = person.worldRanking;
-        }
-      });
       const odds = this.props.weeklyOdds.find(person => {
         return person.playerName === player.name;
       });
@@ -288,12 +276,9 @@ class WeightedResultsTable extends React.Component {
               }
             },
             {
-              Header: "World Ranking",
-              accessor: "worldRanking"
-            },
-            {
               Header: "Odds",
-              accessor: "odds"
+              accessor: "odds",
+              width: 80
             },
             {
               Header: "Total Points (100)",

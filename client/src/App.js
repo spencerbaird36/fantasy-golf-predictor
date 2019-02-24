@@ -225,7 +225,6 @@ class App extends Component {
               <WeightedResultsTable
                 historicalResults={this.state.historicalResults}
                 lastFourResults={this.state.fourTourneyHistory}
-                officialWorldRankings={this.state.worldRankings}
                 currentField={this.state.currentTournametPlayers}
                 selectedTourney={this.state.selectedTourney}
                 fedexRankings={this.state.fedexRankings}
