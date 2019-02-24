@@ -226,6 +226,7 @@ class App extends Component {
                 currentField={this.state.currentTournametPlayers}
                 selectedTourney={this.state.selectedTourney}
                 fedexRankings={this.state.fedexRankings}
+                currentTournamentName={this.state.currentTournamentName}
               />
             </Segment>
           )}

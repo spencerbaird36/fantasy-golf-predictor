@@ -220,7 +220,9 @@ class WeightedResultsTable extends React.Component {
               Header: "Player Name",
               accessor: "name",
               Cell: row => {
-                return currentPlayers.includes(row.original.name)
+                return currentPlayers.includes(row.original.name) &&
+                  this.props.selectedTourney ===
+                    this.props.currentTournamentName
                   ? `${row.original.name} #`
                   : row.original.name;
               }
