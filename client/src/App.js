@@ -154,9 +154,9 @@ class App extends Component {
         return elem;
       }
       return elem
-        .replace(/.html/g, "")
         .slice(13)
-        .replace(/\/en\//g, "")
+        .replace(/\/en/g, "")
+        .replace(/.html/g, "")
         .trim();
     });
   };
