@@ -138,8 +138,8 @@ app.get("/api/:tournament/:year", (req, res) => {
 
   rp(options).then($ => {
     let results = [];
-    const table = $(".table-styled").find("tr:not(:first-child)");
-    for (let i = 0; i < table.length; i++) {
+    const table = $(".table-styled").find("tbody tr");
+    for (let i = 1; i < table.length; i++) {
       let player = {};
       let current = table[i];
       let name = $(current)
