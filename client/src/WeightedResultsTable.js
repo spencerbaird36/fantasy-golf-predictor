@@ -129,7 +129,10 @@ class WeightedResultsTable extends React.Component {
       "Phil Mickelson",
       "Bubba Watson",
       "Scott Brown",
-      "Rory McIlroy"
+      "Rory McIlroy",
+      "Ian Poulter",
+      "Adam Scott",
+      "Bryson DeChambeau"
     ];
     const { fedexRankings } = this.props;
     const currentPlayers = this.props.currentField.map(player => {

@@ -151,7 +151,7 @@ class App extends Component {
   htmlParser = tournaments => {
     return tournaments.map(elem => {
       if (elem === "https://www.theplayers.com/") {
-        return elem;
+        return "the-players";
       }
       return elem
         .slice(13)
