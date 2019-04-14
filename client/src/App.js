@@ -54,8 +54,7 @@ class App extends Component {
               axios.get(`/api/${priorFourTourneys[2]}/2019`),
               axios.get(`/api/${priorFourTourneys[3]}/2019`),
               axios.get("/api/world_ranking"),
-              axios.get("/api/fedex_rankings"),
-              axios.get("/api/weekly_odds")
+              axios.get("/api/fedex_rankings")
             ])
             .then(
               axios.spread(
@@ -66,8 +65,7 @@ class App extends Component {
                   previous3,
                   previous4,
                   worldRankings,
-                  fedexRankings,
-                  weeklyOdds
+                  fedexRankings
                 ) => {
                   const lastFourResults = this.constructData(
                     previous1.data,
@@ -87,8 +85,7 @@ class App extends Component {
                       players.data.Tournament.TournamentName,
                     fourTourneyHistory: lastFourResults,
                     worldRankings: worldRankings.data,
-                    fedexRankings: fedexRankings.data,
-                    weeklyOdds: weeklyOdds.data
+                    fedexRankings: fedexRankings.data
                   });
                 }
               )
@@ -229,7 +226,6 @@ class App extends Component {
                 selectedTourney={this.state.selectedTourney}
                 fedexRankings={this.state.fedexRankings}
                 currentTournamentName={this.state.currentTournamentName}
-                weeklyOdds={this.state.weeklyOdds}
               />
             </Segment>
           )}
