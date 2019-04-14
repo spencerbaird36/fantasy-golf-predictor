@@ -112,10 +112,6 @@ class WeightedResultsTable extends React.Component {
       values.name = player.name;
       values.allMetrics = player.allMetrics;
       values.totalPoints = player.totalPoints;
-      const odds = this.props.weeklyOdds.find(person => {
-        return person.playerName === player.name;
-      });
-      values.odds = odds ? odds.odds : "";
       return values;
     });
   };
@@ -132,7 +128,11 @@ class WeightedResultsTable extends React.Component {
       "Rory McIlroy",
       "Ian Poulter",
       "Adam Scott",
-      "Bryson DeChambeau"
+      "Bryson DeChambeau",
+      "Tony Finau",
+      "Sergio Garcia",
+      "Dustin Johnson",
+      "Francesco Molinari"
     ];
     const { fedexRankings } = this.props;
     const currentPlayers = this.props.currentField.map(player => {
