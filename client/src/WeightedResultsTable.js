@@ -132,7 +132,12 @@ class WeightedResultsTable extends React.Component {
       "Tony Finau",
       "Sergio Garcia",
       "Dustin Johnson",
-      "Francesco Molinari"
+      "Francesco Molinari",
+      "Patrick Cantlay",
+      "Ryan Palmer",
+      "Webb Simpson",
+      "Jordan Spieth",
+      "Brooks Koepka"
     ];
     const { fedexRankings } = this.props;
     const currentPlayers = this.props.currentField.map(player => {
