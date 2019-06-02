@@ -137,7 +137,9 @@ class WeightedResultsTable extends React.Component {
       "Ryan Palmer",
       "Webb Simpson",
       "Jordan Spieth",
-      "Brooks Koepka"
+      "Brooks Koepka",
+      "Matt Kuchar",
+      "Jon Rahm"
     ];
     const { fedexRankings } = this.props;
     const currentPlayers = this.props.currentField.map(player => {
