@@ -109,10 +109,10 @@ class App extends Component {
     this.setState({ value: formattedString }, () => {
       axios
         .all([
+          axios.get(`/api/${this.state.value}/2019`),
           axios.get(`/api/${this.state.value}/2018`),
           axios.get(`/api/${this.state.value}/2017`),
-          axios.get(`/api/${this.state.value}/2016`),
-          axios.get(`/api/${this.state.value}/2015`)
+          axios.get(`/api/${this.state.value}/2016`)
         ])
         .then(
           axios.spread(
@@ -134,19 +134,28 @@ class App extends Component {
   };
 
   findPreviousFourTournaments = (tournaments, currentTournamet) => {
-    const currentTourney = tournaments.find(elem => {
+    const filteredTourneys = tournaments.filter(
+      tourney => tourney.value !== "https://www.presidentscup.com/"
+    );
+    console.log(filteredTourneys);
+    const currentTourney = filteredTourneys.find(elem => {
       return elem.value === currentTournamet;
     });
-    const currentTournamentIndex = tournaments.indexOf(currentTourney);
+    const currentTournamentIndex = filteredTourneys.indexOf(currentTourney);
     const previousTourneys = [];
     for (let i = currentTournamentIndex - 4; i < currentTournamentIndex; i++) {
-      previousTourneys.push(tournaments[i].value);
+      if (filteredTourneys[i]) {
+        previousTourneys.push(filteredTourneys[i].value);
+      }
     }
     return this.htmlParser(previousTourneys);
   };
 
   htmlParser = tournaments => {
     return tournaments.map(elem => {
+      if (!elem) {
+        return "";
+      }
       if (elem === "https://www.theplayers.com/") {
         return "the-players";
       }

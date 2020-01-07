@@ -2,11 +2,36 @@ const express = require("express");
 const path = require("path");
 const rp = require("request-promise");
 const cheerio = require("cheerio");
+const connection = process.env.MONGODB_URI;
 
 const app = express();
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));
+
+app.get("/api/scrape", (req, res) => {
+  const url = "https://statdata.pgatour.com/players/player.json";
+  let options = {
+    uri: url,
+    json: true
+  };
+  rp(options).then(response => {
+    const players = response.plrs.filter(player => {
+      return player.yrs.includes("2020");
+    });
+
+    const formattedPlayers = players.map(player => {
+      const { nameF, nameL, pid, ct } = player;
+      return {
+        id: pid,
+        firstName: nameF,
+        lastName: nameL,
+        country: ct
+      };
+    });
+    res.json(formattedPlayers);
+  });
+});
 
 app.get("/api/schedule", (req, res) => {
   const url = "https://www.pgatour.com/tournaments/schedule.html";
@@ -116,10 +141,16 @@ app.get("/api/world_ranking", (req, res) => {
 });
 
 app.get("/api/:tournament/:year", (req, res) => {
+  console.log * req;
   const year = req.params.year;
   let tournament = req.params.tournament;
   if (tournament === "wgc-mexico-championship") {
     tournament = "wgc-mexico-championship/en";
+  }
+  console.log(tournament);
+
+  if (!tournament) {
+    return [];
   }
 
   let url;
