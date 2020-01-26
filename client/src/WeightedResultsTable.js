@@ -117,30 +117,7 @@ class WeightedResultsTable extends React.Component {
   };
 
   render() {
-    const takenPlayers = [
-      "Marc Leishman",
-      "Adam Hadwin",
-      "Charles Howell III",
-      "Hideki Matsuyama",
-      "Phil Mickelson",
-      "Bubba Watson",
-      "Scott Brown",
-      "Rory McIlroy",
-      "Ian Poulter",
-      "Adam Scott",
-      "Bryson DeChambeau",
-      "Tony Finau",
-      "Sergio Garcia",
-      "Dustin Johnson",
-      "Francesco Molinari",
-      "Patrick Cantlay",
-      "Ryan Palmer",
-      "Webb Simpson",
-      "Jordan Spieth",
-      "Brooks Koepka",
-      "Matt Kuchar",
-      "Jon Rahm"
-    ];
+    const takenPlayers = ["Marc Leishman", "Tony Finau"];
     const { fedexRankings } = this.props;
     const currentPlayers = this.props.currentField.map(player => {
       const name = player.PlayerName.split(",");

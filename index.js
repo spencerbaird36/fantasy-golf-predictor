@@ -141,13 +141,11 @@ app.get("/api/world_ranking", (req, res) => {
 });
 
 app.get("/api/:tournament/:year", (req, res) => {
-  console.log * req;
   const year = req.params.year;
   let tournament = req.params.tournament;
   if (tournament === "wgc-mexico-championship") {
     tournament = "wgc-mexico-championship/en";
   }
-  console.log(tournament);
 
   if (!tournament) {
     return [];
@@ -170,7 +168,7 @@ app.get("/api/:tournament/:year", (req, res) => {
   rp(options).then($ => {
     let results = [];
     const table = $(".table-styled").find("tbody tr");
-    for (let i = 1; i < table.length; i++) {
+    for (let i = 0; i < table.length; i++) {
       let player = {};
       let current = table[i];
       let name = $(current)
@@ -180,11 +178,12 @@ app.get("/api/:tournament/:year", (req, res) => {
 
       let position = $(current)
         .children("td:nth-child(2)")
+        .children("span:nth-child(4)")
         .text()
         .trim();
 
       let winnings = $(current)
-        .children("td:nth-child(8)")
+        .children("td:nth-child(9)")
         .text()
         .trim();
 
@@ -194,7 +193,8 @@ app.get("/api/:tournament/:year", (req, res) => {
         winnings === "" ? 0 : parseFloat(winnings.replace(/\$|,/g, ""));
       results.push(player);
     }
-    res.json(results.slice(1));
+    console.log(results);
+    res.json(results);
   });
 });
 

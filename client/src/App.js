@@ -49,10 +49,10 @@ class App extends Component {
                   response2.data.tid
                 }/field.json`
               ),
-              axios.get(`/api/${priorFourTourneys[0]}/2019`),
-              axios.get(`/api/${priorFourTourneys[1]}/2019`),
-              axios.get(`/api/${priorFourTourneys[2]}/2019`),
-              axios.get(`/api/${priorFourTourneys[3]}/2019`),
+              axios.get(`/api/${priorFourTourneys[0]}/2020`),
+              axios.get(`/api/${priorFourTourneys[1]}/2020`),
+              axios.get(`/api/${priorFourTourneys[2]}/2020`),
+              axios.get(`/api/${priorFourTourneys[3]}/2020`),
               axios.get("/api/world_ranking"),
               axios.get("/api/fedex_rankings")
             ])
@@ -134,10 +134,17 @@ class App extends Component {
   };
 
   findPreviousFourTournaments = (tournaments, currentTournamet) => {
-    const filteredTourneys = tournaments.filter(
-      tourney => tourney.value !== "https://www.presidentscup.com/"
-    );
-    console.log(filteredTourneys);
+    const filteredTourneys = tournaments
+      .filter(tourney => tourney.value !== "https://www.presidentscup.com/")
+      .map(event => {
+        if (
+          event.value ===
+          "https://www.pgatour.com/tournaments/the-american-express.html"
+        ) {
+          event.value = "/tournaments/the-american-express.html";
+        }
+        return event;
+      });
     const currentTourney = filteredTourneys.find(elem => {
       return elem.value === currentTournamet;
     });
